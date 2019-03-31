@@ -54,7 +54,7 @@ set Sandra is_actor
 set Sandra is_god
 set Sandra is_female
 
-create Daniel
-set Daniel is_actor
-set Daniel is_god
-set Daniel is_male
+create Sent
+set Sent is_actor
+set Sent is_god
+set Sent is_male

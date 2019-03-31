@@ -24,7 +24,7 @@ create office
 set office is_thing
 set office is_location
 
-# small (moveable) objects
+# smalSan (moveable) objects
 
 create apple
 set apple is_thing
@@ -48,26 +48,26 @@ set table is_thing
 set table is_in kitchen
 
 # actors
-create John
-set John is_actor
-set John is_in kitchen
-set John is_god
-set John is_male
+create Иван
+set Иван is_actor
+set Иван is_in kitchen
+set Иван is_god
+set Иван is_male
 
-create Mary
-set Mary is_actor
-set Mary is_in bedroom
-set Mary is_god
-set Mary is_female
+create Мария
+set Мария is_actor
+set Мария is_in bedroom
+set Мария is_god
+set Мария is_female
 
-create Sandra
-set Sandra is_actor
-set Sandra is_in garden
-set Sandra is_god
-set Sandra is_female
+create Полина
+set Полина is_actor
+set Полина is_in garden
+set Полина is_god
+set Полина is_female
 
-create Daniel
-set Daniel is_actor
-set Daniel is_in hallway
-set Daniel is_god
-set Daniel is_male
+create Анна
+set Анна is_actor
+set Анна is_in hallway
+set Анна is_god
+set Анна is_male
