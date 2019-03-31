@@ -19,7 +19,6 @@ function utilities.split(s)
     local inner_loop = false
     local opening_quote
     for word in string.gmatch(s, "%S+") do
-        print(word)
         local first_char = word:sub(1, 1)
         local last_char = word:sub(-1, -1)
         if not inner_loop then
