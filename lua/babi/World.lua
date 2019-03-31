@@ -42,22 +42,13 @@ end
 function World:perform_command(command)
     local function parse(actor, action, ...)
         actor = self.entities[actor] or error('actor not found', 2)
-        if not ... then
-            print('hueva')
-        end
-        print('1')
         local args = {}
-        print('2')
         for _, arg in ipairs{...} do
             -- Try and resolve as entity, otherwise keep the string
-            print('123')
             args[#args + 1] = self.entities[arg] or arg
-            print(#args)
-            print(args[#args])
         end
         return actor, action, args
     end
-    print(command)
     local actor, action, args = parse(unpack(utilities.split(command)))
     self:perform_action(action, actor, unpack(args))
 end
