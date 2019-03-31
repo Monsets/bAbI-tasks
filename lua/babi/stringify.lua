@@ -313,12 +313,23 @@ do
                 before, after = after, before
             end
         end
+
         local templates = {
-            '%s went to the %s',
-            '%s journeyed to the %s',
-            '%s travelled to the %s',
-            '%s moved to the %s',
+            '%s ушел в %s',
+            '%s пошел в %s',
+            '%s направился в %s',
+            '%s отправился в %s',
         }
+        --gender suffix
+        if self:clause().actor.is_female then
+            templates = {
+                '%s ушла в %s',
+                '%s пошла в %s',
+                '%s направилась в %s',
+                '%s отправилась в %s',
+            }
+        end
+
         templates = tablex.map(
             function(t)
                 return stringx.strip(stringx.join(' ', {before, t, after}))
@@ -476,8 +487,9 @@ do
     function EvalIsIn:render()
         local template
         local clause = self:clause().args
+        --First task question
         if clause.args[1].is_actor then
-            template = 'where is %s?'
+            template = 'Где сейчас %s?'
         else
             template = 'where is the %s?'
         end
