@@ -60,7 +60,6 @@ end
 
 -- Create a new entity in the world
 function World:create_entity(id, properties, name)
-    print('entity')
     name = name or id
     if self.entities[id] then
         error('id already exists', 2)
