@@ -219,10 +219,19 @@ do
     function SimpleGet:render(actor)
         actor = actor or self:clause().actor.name
         local templates = {
-            '%s grabbed the %s',
-            '%s took the %s',
-            '%s got the %s'
+            '%s забрал %s',
+            '%s взял %s',
+            '%s получил %s'
         }
+
+        if self:clause().actor.is_female then
+            templates = {
+                '%s забрала %s',
+                '%s взяла %s',
+                '%s получила %s'
+            }
+        end
+
         return tablex.map(string.format, templates,
                           actor, self:clause().args[1].name)
     end
@@ -336,8 +345,9 @@ do
             end,
             templates
         )
+        print(self:clause().args[1].declension)
         return tablex.map(string.format, templates,
-                          actor, self:clause().args[1].name)
+                          actor, self:clause().args[1].declension)
     end
 end
 
@@ -491,7 +501,7 @@ do
         if clause.args[1].is_actor then
             template = 'Где сейчас %s?'
         else
-            template = 'where is the %s?'
+            template = 'Где сейчас %s?'
         end
         return {(template .. '\t%s'):format(clause.args[1].name,
                                             clause.args[3].name)}
@@ -613,10 +623,19 @@ do
 
     function SimpleDrop:render()
         local templates = {
-            '%s dropped the %s',
-            '%s put down the %s',
-            '%s let go of the %s'
+            '%s уронил %s',
+            '%s положил %s',
+            '%s отпустил %s'
         }
+
+        if self:clause().actor.is_female then
+            templates = {
+                '%s уронила %s',
+                '%s положила %s',
+                '%s отпустила %s'
+            }
+        end
+
         return tablex.map(string.format, templates,
                           self:clause().actor.name, self:clause().args[1].name)
     end

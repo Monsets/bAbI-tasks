@@ -11,6 +11,7 @@ local tablex = require 'pl.tablex'
 
 local babi = require 'babi._env'
 
+
 do
     local EntityProperties = torch.class('babi.EntityProperties', babi)
 
@@ -61,7 +62,9 @@ do
         -- knowledge[john]:update('is_in',
         --     List{{value=kitchen, truth_value=false},
         --          {value=garden, truth_value=false}})
+
         self[property] = tablex.deepcopy(values)
+
         if support then
             for _, value in ipairs(self[property]) do
                 value.support = value.support + support

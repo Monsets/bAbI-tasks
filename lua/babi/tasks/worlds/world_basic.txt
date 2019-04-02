@@ -3,49 +3,55 @@
 create спальня
 set спальня is_thing
 set спальня is_location
+set спальня declension спальню
 
 create кухня
 set кухня is_thing
 set кухня is_location
+set кухня declension кухню
 
 create сад
 set сад is_thing
 set сад is_location
+set сад declension сaд
 
 create прихожая
 set прихожая is_thing
 set прихожая is_location
+set прихожая declension прихожую
 
 create ванная
 set ванная is_thing
 set ванная is_location
+set ванная declension ванную
 
 create офис
 set офис is_thing
 set офис is_location
+set офис declension oфис
 
 # smalSan (moveable) objects
 
-create apple
-set apple is_thing
-set apple is_gettable
-set apple is_in кухня
+create яблоко
+set яблоко is_thing
+set яблоко is_gettable
+set яблоко is_in кухня
 
-create football
-set football is_thing
-set football is_gettable
-set football is_in сад
+create мяч
+set мяч is_thing
+set мяч is_gettable
+set мяч is_in сад
 
-create milk
-set milk is_thing
-set milk is_gettable
-set milk is_in кухня
+create молоко
+set молоко is_thing
+set молоко is_gettable
+set молоко is_in кухня
 
 # objects
 
-create table
-set table is_thing
-set table is_in кухня
+create стол
+set стол is_thing
+set стол is_in кухня
 
 # actors
 create Иван

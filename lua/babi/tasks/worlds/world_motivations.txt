@@ -14,20 +14,20 @@ set garden is_location
 
 # small (moveable) objects
 
-create apple
-set apple is_thing
-set apple is_gettable
-set apple is_in kitchen
+create яблоко
+set яблоко is_thing
+set яблоко is_gettable
+set яблоко is_in kitchen
 
-create football
-set football is_thing
-set football is_gettable
-set football is_in garden
+create мяч
+set мяч is_thing
+set мяч is_gettable
+set мяч is_in garden
 
-create milk
-set milk is_thing
-set milk is_gettable
-set milk is_in kitchen
+create молоко
+set молоко is_thing
+set молоко is_gettable
+set молоко is_in kitchen
 
 create pajamas
 set pajamas is_thing
