@@ -5,36 +5,42 @@ set спальня is_thing
 set спальня is_location
 set спальня declension спальню
 set спальня creative_case спальней
+set спальня accusative спальне
 
 create кухня
 set кухня is_thing
 set кухня is_location
 set кухня declension кухню
 set кухня creative_case кухней
+set кухня accusative кухне
 
 create сад
 set сад is_thing
 set сад is_location
 set сад declension сaд
 set сад creative_case садом
+set сад accusative саду
 
 create прихожая
 set прихожая is_thing
 set прихожая is_location
 set прихожая declension прихожую
 set прихожая creative_case прихожей
+set прихожая accusative прихожей
 
 create ванная
 set ванная is_thing
 set ванная is_location
 set ванная declension ванную
 set ванная creative_case ванной
+set ванная accusative ванной
 
 create офис
 set офис is_thing
 set офис is_location
 set офис declension oфис
 set офис creative_case офисом
+set офис accusative офисе
 
 # smalSan (moveable) objects
 
@@ -67,21 +73,25 @@ set Иван is_actor
 set Иван is_in кухня
 set Иван is_god
 set Иван is_male
+set Иван creative_case Ивану
 
 create Мария
 set Мария is_actor
 set Мария is_in спальня
 set Мария is_god
 set Мария is_female
+set Мария creative_case Марии
 
 create Полина
 set Полина is_actor
 set Полина is_in сад
 set Полина is_god
 set Полина is_female
+set Полина creative_case Полине
 
 create Анна
 set Анна is_actor
 set Анна is_in прихожая
 set Анна is_god
 set Анна is_female
+set Анна creative_case Анне

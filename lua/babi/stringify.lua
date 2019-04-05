@@ -27,11 +27,11 @@ local FULL_DIRECTIONS = {
     }
 }
 local NUMERALS = {
-    [0]='zero', [1]='one', [2]='two', [3]='three', [4]='four', [5]='five',
-    [6]='six', [7]='seven', [8]='eight', [9]='nine', [10]='ten', [11]='eleven',
-    [12]='twelve', [13]='thirteen', [14]='fourteen', [15]='fifteen',
-    [16]='sixteen', [17]='seventeen', [18]='eighteen', [19]='nineteen',
-    [20]='twenty', [21]='twenty-one', [22]='twenty-two', [23]='twenty-three',
+    [0]='Ноль', [1]='Один', [2]='Два', [3]='Три', [4]='Четыре', [5]='Пять',
+    [6]='Шесть', [7]='Семь', [8]='Восемь', [9]='Девять', [10]='Десять', [11]='Одинадцать',
+    [12]='Двенадцать', [13]='Тринадцать', [14]='Четырнадцать', [15]='Пятнадцать',
+    [16]='Шестнадцать', [17]='Семнадцать', [18]='Восемьнадцать', [19]='Девятнадцать',
+    [20]='Двадцать', [21]='Двадцать-один', [22]='Двадцать-два', [23]='Двадцать-три',
     [24]='twenty-four', [25]='twenty-five', [26]='twenty-six',
     [27]='twenty-seven', [28]='twenty-eight', [29]='twenty-nine',
     [30]='thirty', [31]='thirty-one', [32]='thirty-two', [33]='thirty-three',
@@ -369,8 +369,8 @@ do
 
     function CoreferenceTeleport:render()
         local actor = self:clause().actor
-        local adverbs = {'after that %s', 'following that %s',
-                         'then %s', '%s then'}
+        local adverbs = {'После этого %s', 'Далее %s',
+                         'Затем %s', '%s затем'}
         local templates = {
             ' went to the %s',
             ' journeyed to the %s',
@@ -378,7 +378,7 @@ do
             ' moved to the %s',
         }
         return tablex.map(string.format, combinations(adverbs, templates),
-                          actor.is_male and 'he' or 'she',
+                          actor.is_male and 'он' or 'она',
                           self:clause().args[1].name)
     end
 
@@ -659,18 +659,18 @@ do
         local template
         local entity, _, location = unpack(self:clause().args.args)
         if entity.is_actor then
-            template = 'is %s in the %s?'
+            template = '%s сейчас в %s?'
         else
             template = 'is the %s in the %s?'
         end
         local truth_value = self:clause().args.truth_value
         local answer
         if truth_value == nil then
-            answer = 'maybe'
+            answer = 'Возможно'
         else
-            answer = truth_value and 'yes' or 'no'
+            answer = truth_value and 'Да' or 'Нет'
         end
-        return {(template .. '\t%s'):format(entity.name, location.name, answer)}
+        return {(template .. '\t%s'):format(entity.name, location.accusative, answer)}
     end
 
     function YesNoIsIn:render_symbolic()
@@ -1011,17 +1011,17 @@ do
         else
             local actor
             if torch.isTypeOf(entity, 'babi.Entity') then
-                actor = {(entity.is_actor and '' or 'the ') .. '%s is '}
+                actor = {(entity.is_actor and '' or 'the ') .. '%s '}
             else
-                actor = {'%s is '}
+                actor = {'%s '}
             end
             -- Be careful when casting from another template
             local negation = (self:clause().truth_value ~= false) and {''} or
-                             {'not ', 'no longer '}
-            local location_tmpl = {'in the %s'}
+                             {'не ', 'больше не '}
+            local location_tmpl = {'в %s'}
             return tablex.map(string.format,
                               combinations(actor, negation, location_tmpl),
-                              entity, location)
+                              entity, location.accusative)
         end
     end
 end
@@ -1247,7 +1247,7 @@ do
 
     function CountHolding:render()
         local actor, _, objects = unpack(self:clause().args.args)
-        local template = ('how many objects is %s holding?\t%s'):format(
+        local template = ('Сколько предметов %s держит?\t%s'):format(
             actor.name, NUMERALS[#objects]
         )
         return {template}
@@ -1280,13 +1280,13 @@ do
 
     function EvalHolding:render()
         local actor, _, objects = unpack(self:clause().args.args)
-        local template = ('what is %s holding?\t'):format(actor.name)
+        local template = ('Что %s держит?\t'):format(actor.name)
         if #objects > 0 then
             template = template .. stringx.join(',', tablex.map(
                 function(object) return object.name end, objects
             ))
         else
-            template = template .. 'nothing'
+            template = template .. 'Ничего'
         end
         return {template}
     end
@@ -1344,7 +1344,7 @@ do
             template = 'Где ' .. pred .. ' %s перед %s?'
         end
         return {(template .. '\t%s'):format(clause1.args[1].name,
-                                            clause2.args[3].creative_case,
+                                            clause2.args[3].creative_casewh,
                                             clause1.args[3].name)}
     end
 
@@ -1394,8 +1394,11 @@ do
     function SimpleGive:render()
         local actor = self:clause().actor
         local object, recipient = unpack(self:clause().args)
-        local template = '%s gave %s the %s'
-        return {template:format(actor.name, recipient.name, object.name)}
+        local template = '%s отдал %s %s'
+        if actor.is_female then
+            template = '%s отдала %s %s'
+        end
+        return {template:format(actor.name, recipient.creative_case, object.name)}
     end
 end
 
@@ -1417,8 +1420,8 @@ do
 
     function EitherLocation:render()
         local locations = self:clause().locations
-        return {('%s is either in the %s or in the %s'):format(
-            self:clause().actor.name, locations[1].name, locations[2].name
+        return {('%s или в %s или в %s'):format(
+            self:clause().actor.name, locations[1].accusative, locations[2].accusative
         )}
     end
 end
@@ -1440,15 +1443,25 @@ do
     function EvalGive:render()
         local actor = self:clause().args.actor
         local object, recipient = unpack(self:clause().args.args)
-        local tmpl1 = ('what did %s give to %s last?\t%s'):format(
+        local tmpl1 = ('Что %s отдал %s последним?\t%s'):format(
             actor.name, recipient.name, object.name
         )
-        local tmpl2 = ('who received the %s last?\t%s'):format(
+        if actor.is_female then
+            tmpl1 = ('Что %s отдала %s последним?\t%s'):format(
+            actor.name, recipient.creative_case, object.name
+        )
+        end
+        local tmpl2 = ('Кто получил %s последним?\t%s'):format(
             object.name, recipient.name
         )
-        local tmpl3 = ('who did %s give the %s to last?\t%s'):format(
-            actor.name, object.name, recipient.name
+        local tmpl3 = ('Кому %s отдал %s последним?\t%s'):format(
+            actor.name, object.name, recipient.creative_case
         )
+        if actor.is_female then
+            tmpl3 = ('Кому %s отдала %s последнему?\t%s'):format(
+            actor.name, object.name, recipient.creative_case
+        )
+        end
         return {tmpl1, tmpl2, tmpl3}
     end
 
