@@ -345,7 +345,6 @@ do
             end,
             templates
         )
-        print(self:clause().args[1].declension)
         return tablex.map(string.format, templates,
                           actor, self:clause().args[1].declension)
     end
@@ -1329,13 +1328,23 @@ do
     function BeforeIsIn:render()
         local template
         local clause1, clause2 = unpack(self:clause().args)
-        if clause1.args[1].is_actor then
-            template = 'where was %s before the %s?'
+
+        local pred = ''
+        if clause1.args[1].sort == 0 then
+            pred = 'был'
+        elseif clause1.args[1].sort == 1 then
+            pred = 'было'
         else
-            template = 'where was the %s before the %s?'
+            pred = 'была'
+        end
+
+        if clause1.args[1].is_actor then
+            template = 'Где ' .. pred .. ' %s перед %s?'
+        else
+            template = 'Где ' .. pred .. ' %s перед %s?'
         end
         return {(template .. '\t%s'):format(clause1.args[1].name,
-                                            clause2.args[3].name,
+                                            clause2.args[3].creative_case,
                                             clause1.args[3].name)}
     end
 

@@ -101,7 +101,6 @@ do
     function Drop:update_knowledge(world, knowledge, clause, a0, a1)
         if clause.truth_value then
             if knowledge[a0] and knowledge[a0]['is_in'] then
-                print(knowledge)
                 -- The object is in the same place where the dropper is
                 knowledge[a1]:rawset(
                     'is_in', knowledge[a0]['is_in'], Set{clause}

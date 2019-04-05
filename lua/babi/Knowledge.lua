@@ -46,8 +46,7 @@ do
     function EntityProperties:merge(property, values, support)
         -- Combines two lists of values, but assumes exclusivity
         self:rawadd(property, values, support)
-        local true_values = tablex.filter(
-            self[property],
+        local true_values = tablex.filter(self[property],
             function(value) return value.truth_value end
         )
         if #true_values > 0 then

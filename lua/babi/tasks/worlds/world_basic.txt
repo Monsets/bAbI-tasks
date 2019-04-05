@@ -4,31 +4,37 @@ create спальня
 set спальня is_thing
 set спальня is_location
 set спальня declension спальню
+set спальня creative_case спальней
 
 create кухня
 set кухня is_thing
 set кухня is_location
 set кухня declension кухню
+set кухня creative_case кухней
 
 create сад
 set сад is_thing
 set сад is_location
 set сад declension сaд
+set сад creative_case садом
 
 create прихожая
 set прихожая is_thing
 set прихожая is_location
 set прихожая declension прихожую
+set прихожая creative_case прихожей
 
 create ванная
 set ванная is_thing
 set ванная is_location
 set ванная declension ванную
+set ванная creative_case ванной
 
 create офис
 set офис is_thing
 set офис is_location
 set офис declension oфис
+set офис creative_case офисом
 
 # smalSan (moveable) objects
 
@@ -36,17 +42,19 @@ create яблоко
 set яблоко is_thing
 set яблоко is_gettable
 set яблоко is_in кухня
+set яблоко sort 1
 
 create мяч
 set мяч is_thing
 set мяч is_gettable
 set мяч is_in сад
+set мяч sort 0
 
 create молоко
 set молоко is_thing
 set молоко is_gettable
 set молоко is_in кухня
-
+set молоко sort 1
 # objects
 
 create стол
