@@ -4,7 +4,7 @@ create спальня
 set спальня is_thing
 set спальня is_location
 set спальня declension спальню
-set спальня creative_ca спальней
+set спальня creative_case спальней
 set спальня accusative спальне
 
 create кухня
