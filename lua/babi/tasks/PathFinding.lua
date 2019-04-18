@@ -19,8 +19,10 @@ local PathFinding = torch.class('babi.PathFinding', 'babi.Task', babi)
 function PathFinding:new_world()
     local world = babi.World()
     local locations = List()
-    for i, option in ipairs{'bedroom', 'bathroom', 'kitchen',
-                            'office', 'garden', 'hallway'} do
+    for i, option, declension in (ipairs{'спальня', 'ванная', 'кухня',
+                            'офис', 'сад', 'прихожая'} {'спальни', 'ванной', 'кухни',
+                            'офиса', 'сада', 'прихожей'}) do
+        print(declension)
         local location = world:create_entity(option, {is_location = true})
         locations:append(location)
     end

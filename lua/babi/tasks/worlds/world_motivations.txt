@@ -1,16 +1,25 @@
 # locations
 
-create bedroom
-set bedroom is_thing
-set bedroom is_location
+create кухня
+set кухня is_thing
+set кухня is_location
+set кухня declension кухню
+set кухня creative_case кухней
+set кухня accusative кухне
 
-create kitchen
-set kitchen is_thing
-set kitchen is_location
+create сад
+set сад is_thing
+set сад is_location
+set сад declension сaд
+set сад creative_case садом
+set сад accusative саду
 
-create garden
-set garden is_thing
-set garden is_location
+create прихожая
+set прихожая is_thing
+set прихожая is_location
+set прихожая declension прихожую
+set прихожая creative_case прихожей
+set прихожая accusative прихожей
 
 # small (moveable) objects
 

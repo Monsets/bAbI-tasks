@@ -20,8 +20,8 @@ function IsDir:new_world()
     local world = babi.World()
 
     -- Pick three random locations
-    local options = {'bedroom', 'bathroom', 'kitchen',
-                     'office', 'garden', 'hallway'}
+    local options = {'спальня', 'ванная', 'кухня',
+                     'офис', 'сад', 'прихожая'}
     local locations = List()
     while #locations < 3 do
         local option = options[math.random(#options)]

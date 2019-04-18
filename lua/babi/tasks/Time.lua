@@ -25,7 +25,7 @@ function Time:generate_story(world, knowledge, story)
     local actors = world:get_actors()
     local locations = world:get_locations()
     local times =
-        {'yesterday', 'this morning', 'this afternoon', 'this evening'}
+        {'вчера', 'этим утром', 'днём', 'этим вечером'}
     local num_questions = 5
 
     local movements = {}

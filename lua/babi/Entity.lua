@@ -10,9 +10,9 @@ local babi = require 'babi._env'
 local Entity = torch.class('babi.Entity', babi)
 
 -- An entity in the world (just a table with some defaults)
-function Entity:__init(name, properties)
+function Entity:__init(name, properties, declension)
     self.name = name
-
+    self.declension = declension
     self.carry = 0
     self.size = 0
     self.is_thing = true

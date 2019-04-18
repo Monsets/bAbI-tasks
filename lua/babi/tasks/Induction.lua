@@ -17,13 +17,13 @@ local Deduction = torch.class('babi.Deduction', 'babi.Task', babi)
 
 function Deduction:new_world()
     local world = babi.World()
-    for _, animal in pairs{'swan', 'lion', 'frog', 'rhino'} do
+    for _, animal in pairs{'лебедь', 'лев', 'лягушка', 'носорог'} do
         world:create_entity(animal, {is_animal=true})
     end
-    for _, color in pairs{'gray', 'white', 'yellow', 'green'} do
+    for _, color in pairs{'серого цвета', 'белого цвета', 'жёлтого цвета', 'зеленого цвета'} do
         world:create_entity(color, {is_color=true})
     end
-    for _, actor in pairs{'Lily', 'Bernhard', 'Greg', 'Julius', 'Brian'} do
+    for _, actor in pairs{'Джулиус', 'Бернард', 'Грег', 'Брайн', 'Лилли'} do
         world:create_entity(actor, {is_actor=true, is_god=true})
     end
     return world

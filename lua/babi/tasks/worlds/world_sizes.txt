@@ -1,26 +1,33 @@
 # containers
 
-create suitcase
-set suitcase is_thing
-set suitcase is_container
+create чемодан
+set чемодан is_thing
+set чемодан is_container
+set чемодан declension чемодан
 
-create container
-set container is_thing
-set container is_container
+create контейнер
+set контейнер is_thing
+set контейнер is_container
+set контейнер declension контейнер
 
-create box
-set box is_thing
-set box is_container
+create коробка
+set коробка is_thing
+set коробка is_container
+set коробка declension коробку
 
-create "treasure chest"
-set "treasure chest" is_thing
-set "treasure chest" is_container
+create "сундук с сокровищами"
+set "сундук с сокровищами" is_thing
+set "сундук с сокровищами" is_container
+set "сундук с сокровищами" declension "сундук с сокровищами"
 
-create "box of chocolates"
-set "box of chocolates" is_thing
-set "box of chocolates" is_container
-set "box of chocolates" size 1
+create "коробка с шоколадом"
+set "коробка с шоколадом" is_thinggvt
+set "коробка с шоколадом" is_container
+set "коробка с шоколадом" size 1
+set "коробка с шоколадом" declension "коробку с шоколадом"
 
-create chocolate
-set chocolate is_thing
-set chocolate size 0.5
+
+create шоколад
+set шоколад is_thing
+set шоколад size 0.5
+set шоколад declension шоколад

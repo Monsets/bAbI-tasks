@@ -19,11 +19,11 @@ local OPPOSITE_DIRECTIONS = {n='s', ne='sw', e='w', se='nw', s='n',
                              sw='ne', w='e', nw='se', u='d', d='u'}
 local FULL_DIRECTIONS = {
     cardinal={
-        n='north',s='south',e='east',w='west'
+        n='севернее',s='южнее',e='восточнее',w='западнее'
     },
     relative={
-        n='above', s='below',
-        w='to the left of', e='to the right of'
+        n='выше', s='ниже',
+        w='слева от', e='справа от'
     }
 }
 local NUMERALS = {
@@ -339,6 +339,17 @@ do
             }
         end
 
+        --more than one person
+        _, n  = actor:gsub("%S+", "")
+        if n > 1 then
+        templates = {
+            '%s ушли в %s',
+            '%s пошли в %s',
+            '%s направились в %s',
+            '%s отправились в %s',
+        }
+        end
+
         templates = tablex.map(
             function(t)
                 return stringx.strip(stringx.join(' ', {before, t, after}))
@@ -372,14 +383,23 @@ do
         local adverbs = {'После этого %s', 'Далее %s',
                          'Затем %s', '%s затем'}
         local templates = {
-            ' went to the %s',
-            ' journeyed to the %s',
-            ' travelled to the %s',
-            ' moved to the %s',
-        }
+                ' ушел в %s',
+                ' пошел в %s',
+                ' направился в %s',
+                ' отправился в %s',
+            }
+        --gender suffix
+        if self:clause().actor.is_female then
+            templates = {
+                ' ушла в %s',
+                ' пошла в %s',
+                ' направилась в %s',
+                ' отправилась в %s',
+            }
+        end
         return tablex.map(string.format, combinations(adverbs, templates),
                           actor.is_male and 'он' or 'она',
-                          self:clause().args[1].name)
+                          self:clause().args[1].declension)
     end
 
     function CoreferenceTeleport:add_coreferences()
@@ -426,15 +446,15 @@ do
     end
 
     function CompoundCoreferenceTeleport:render()
-        local adverbs = {'after that', 'following that', 'then'}
+        local adverbs = {'Потом', 'Затем', 'После этого'}
         local templates = {
-            ' they went to the %s',
-            ' they journeyed to the %s',
-            ' they travelled to the %s',
-            ' they moved to the %s',
+            ' они ушли в %s',
+            ' они отправились в %s',
+            ' они направились %s',
+            ' они пошли %s',
         }
         return tablex.map(string.format, combinations(adverbs, templates),
-                          self:clause().args[1].name)
+                          self:clause().args[1].declension)
     end
 end
 
@@ -473,7 +493,7 @@ do
         local names =
             {self:clause().actor.name, self.story[self.i + 1].actor.name}
         local order = math.random(2)
-        local conjunction = ('%s and %s'):format(names[order], names[3 - order])
+        local conjunction = ('%s и %s'):format(names[order], names[3 - order])
         return self:cast(templates.SimpleTeleport):render(conjunction)
     end
 end
@@ -530,7 +550,7 @@ do
     end
 
     function EvalHasFear:render()
-        local template = 'what is %s afraid of?'
+        local template = 'Кого %s боится?'
         local clause = self:clause().args
         return {(template .. '\t%s'):format(clause.args[1].name,
                                             clause.args[3].name)}
@@ -561,10 +581,18 @@ do
     end
 
     function EvalHasColor:render()
-        local template = 'what color is %s?'
+        local template = 'Какого цвета %s?'
         local clause = self:clause().args
+
+        --answer should contain only one word
+        local asw = ''
+        for w in string.gmatch(clause.args[3].name, "%S+") do
+            asw = w
+            break
+        end
+
         return {(template .. '\t%s'):format(clause.args[1].name,
-                                            clause.args[3].name)}
+                                            asw)}
     end
 
     function EvalHasColor:render_symbolic()
@@ -592,9 +620,12 @@ do
 
     function EvalBefore:render()
         local clause = self:clause().args
-        local template = 'where was %s before the %s?'
+        local template = 'Где был %s перед %s?'
+        if clause.args[1].is_female then
+            template = 'Где была %s перед %s?'
+        end
         return {(template .. '\t%s'):format(clause.args[1].name,
-                                            clause.args[4].name,
+                                            clause.args[4].creative_case,
                                             clause.args[3].name)}
     end
 
@@ -847,9 +878,34 @@ do
     function YesNoDir:render()
         local source, dir, target = unpack(self:clause().args.args)
         local full_directions = FULL_DIRECTIONS[self.config.directions]
-        local tmpl1 = 'is the %s %s the %s?\t%s'
-        tmpl1 = tmpl1:format(source.name, full_directions[dir], target.name,
-                             self:clause().args.truth_value and 'yes' or 'no')
+
+
+        loc2 = target.name
+        local fixed_loc2 = ''
+        _,n = tostring(loc2):gsub("%S+","")
+
+        if n == 1 then
+            fixed_loc2 = loc2..'а'
+        else
+            local i = 0
+            for w in string.gmatch(loc2, "%S+") do
+                if i == 0 then
+                    fixed_loc2 = w:sub(1, -5)
+                    if fixed_loc2 == 'син' then
+                        fixed_loc2 = fixed_loc2..'его'
+                    elseif fixed_loc2 == 'розов' or 'желт' or 'красн' then
+                        fixed_loc2 = fixed_loc2..'ого'
+                    end
+                else
+                    fixed_loc2 = fixed_loc2..' '..w..'а'
+                end
+                i = i + 1
+            end
+        end
+        local tmpl1 = '%s %s %s?\t%s'
+
+        tmpl1 = tmpl1:format(source.name, full_directions[dir], fixed_loc2,
+                             self:clause().args.truth_value and 'да' or 'нет')
         return {tmpl1}
     end
 
@@ -881,12 +937,59 @@ do
 
     function Dir:render()
         local loc1, dir, loc2 = unpack(self:clause().args)
+        --declension
+        local fixed_loc1 = ''
+        local fixed_loc2 = ''
+
+        _,n = tostring(loc1):gsub("%S+","")
+
+        if n == 1 then
+            fixed_loc1 = loc1.name..'а'
+        else
+            local i = 0
+            for w in string.gmatch(loc1.name, "%S+") do
+                if i == 0 then
+                    fixed_loc1 = w:sub(1, -5)
+                    if fixed_loc1 == 'син' then
+                        fixed_loc1 = fixed_loc1..'его'
+                    elseif fixed_loc1 == 'розов' or 'желт' or 'красн' then
+                        fixed_loc1 = fixed_loc1..'ого'
+                    end
+                else
+                    fixed_loc1 = fixed_loc1..' '..w..'а'
+                end
+                i = i + 1
+            end
+        end
+
+        _,n = tostring(loc2):gsub("%S+","")
+
+        if n == 1 then
+            fixed_loc2 = loc2.name..'а'
+        else
+            local i = 0
+            for w in string.gmatch(loc2.name, "%S+") do
+                if i == 0 then
+                    fixed_loc2 = w:sub(1, -5)
+                    if fixed_loc2 == 'син' then
+                        fixed_loc2 = fixed_loc2..'его'
+                    elseif fixed_loc2 == 'розов' or 'желт' or 'красн' then
+                        fixed_loc2 = fixed_loc2..'ого'
+                    end
+                else
+                    fixed_loc2 = fixed_loc2..' '..w..'а'
+                end
+                i = i + 1
+            end
+        end
+
+        print(self:clause().args)
         local full_directions = FULL_DIRECTIONS[self.config.directions]
-        local tmpl = 'the %s is %s the %s'
-        return {tmpl:format(loc1.name, full_directions[dir], loc2.name),
+        local tmpl = '%s %s %s'
+        return {tmpl:format(loc1.name, full_directions[dir], fixed_loc2),
                 tmpl:format(loc2.name,
                             full_directions[OPPOSITE_DIRECTIONS[dir]],
-                            loc1.name)}
+                            fixed_loc1)}
     end
 end
 
@@ -1094,9 +1197,9 @@ do
         object = object or self:clause().args[3]
         local template
         if object.is_adjective then
-            template = '%s is %s'
+            template = '%s %s'
         else
-            template = ('%%s is %s %%s'):format(indefinite_article(object))
+            template = ('%%s - %%s'):format(indefinite_article(object))
         end
         return {template:format(actor.name, object.name)}
     end
@@ -1119,7 +1222,7 @@ do
 
     function HasFear:render()
         local animal, _, fears = unpack(self:clause().args)
-        return {('%s are afraid of %s'):format(animal.plural, fears.plural)}
+        return {('%s боятся %s'):format(animal.plural, fears.plural)}
     end
 end
 
@@ -1140,7 +1243,7 @@ do
 
     function HasColor:render()
         local animal, _, color = unpack(self:clause().args)
-        return {('%s is %s'):format(animal.name, color.name)}
+        return {('%s %s'):format(animal.name, color.name)}
     end
 end
 
@@ -1498,7 +1601,7 @@ do
     end
 
     function SimpleOrdering:render()
-        local template = 'the %s is bigger than the %s'
+        local template = '%s больше чем %s'
         return {template:format(self:clause().args[1], self:clause().args[3])}
     end
 end
@@ -1523,13 +1626,12 @@ do
 
     function EvalOrdering:render()
         local x, y = self:clause().args.args[1], self:clause().args.args[3]
-        local templates1 = {'is the %s bigger than %s?\tyes',
-                            'does the %s fit in the %s?\tno'}
-        local templates2 = {'is the %s bigger than %s?\tno',
-                            'does the %s fit in the %s?\tyes'}
-        templates1 = tablex.map(string.format, templates1, x, y)
-        templates2 = tablex.map(string.format, templates2, y, x)
-        return List(templates1):extend(templates2)
+        local templates1 = ('Больше ли %s чем %s?\tда'):format(x, y)
+        local templates2 = ('Поместится ли %s в %s?\tнет'):format(x, y.declension)
+        local templates3 = ('Больше ли %s чем %s?\tнет'):format(y, x)
+        local templates4 = ('Поместится ли %s в %s?\tда'):format(y, x.declension)
+
+        return List({templates1, templates2}):extend({templates3, templates4})
     end
 
     function EvalOrdering:render_symbolic()
